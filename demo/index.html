@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue-animated-icon</title>
+    <script src="./vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div>
+            <animated-icon src="./1.png" :width="100" :steps="20" />
+        </div>
+        <div>
+            <animated-icon src="./2.png" :steps="20" />
+        </div>
+        <div>
+            <animated-icon src="./3.png" :width="215" :height="216" :steps="37" />
+        </div>
+    </div>
+
+
+    <script>
+        var AnimatedIcon = {
+            name: 'AnimatedIcon',
+            template: `<div ref="icon" @mouseenter="mouseenter" @mouseleave="mouseleave" />`,
+            data: () => {
+                return {
+                    active: false,
+                    y: 0
+                }
+            },
+            props: {
+                src: {
+                    type: String,
+                    required: true
+                },
+                steps: {
+                    type: Number,
+                    required: true
+                },
+                width: {
+                    type: Number,
+                    default: 128
+                },
+                height: {
+                    type: Number,
+                },
+            },
+            computed: {
+                _height() {
+                    return this.height || this.width
+                }
+            },
+            mounted() {
+                Object.assign(this.$refs.icon.style, {
+                    width: `${this.width}px`,
+                    height: `${this._height}px`,
+                    backgroundImage: `url(${this.src})`,
+                    backgroundSize: `100%`,
+                    backgroundPositionY: `0px`,
+                })
+            },
+            methods: {
+                mouseenter(e) {
+                    this.active = true
+                    this.forward(e.target)
+                },
+                mouseleave(e) {
+                    this.active = false
+                    this.backward(e.target)
+                },
+                forward(target) {
+                    if (this.y > - this._height * this.steps && this.active) {
+                        this.y -= this._height
+                        target.style.backgroundPositionY = `${this.y}px`
+                        requestAnimationFrame(() => {
+                            this.forward(target)
+                        })
+                    }
+                },
+                backward(target) {
+                    if (this.y < 0 && !this.active) {
+                        this.y += this._height
+                        target.style.backgroundPositionY = `${this.y}px`
+                        requestAnimationFrame(() => {
+                            this.backward(target)
+                        })
+                    }
+                },
+            },
+        }
+        new Vue({
+            el: '#app',
+            components: {
+                AnimatedIcon
+            }
+        })
+    </script>
+</body>
+
+</html>
