@@ -2,6 +2,8 @@
 
 仿阿里云首页动态图标，使用逐帧动画形式将雪碧图(Sprite)渲染为可交互的动画。
 
+[demo](./demo/index.html)
+
 ![](./doc/img/qEL0fQQPW0.gif)
 
 ## Examples
